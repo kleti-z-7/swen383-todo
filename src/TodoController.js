@@ -1,4 +1,3 @@
-// src/TodoController.js
 export class TodoController {
   constructor(todoService, todoRenderer) {
     this.todoService = todoService;

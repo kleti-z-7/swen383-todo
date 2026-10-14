@@ -1,5 +1,3 @@
-// src/TodoService.js
-// Owns the tasks. Knows nothing about the page and nothing about localStorage.
 export class TodoService {
   constructor(storage) {
     this.storage = storage;

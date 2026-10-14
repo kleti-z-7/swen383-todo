@@ -1,5 +1,3 @@
-// src/TodoRenderer.js
-// Everything that touches the page. Each method reads the tasks from the service.
 export class TodoRenderer {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -72,7 +70,6 @@ export class TodoRenderer {
   }
 }
 
-// Moved from todo.js unchanged: it builds markup, so it lives with the renderer.
 function buildTaskRow(id, desc, completed, priority, createdAt, showActions) {
   const label = desc.length > 40 ? `${desc.slice(0, 40)}...` : desc;
   const priorityClass = priority === 'high' ? 'priority-high' : '';

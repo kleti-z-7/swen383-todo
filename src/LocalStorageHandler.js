@@ -1,4 +1,3 @@
-// src/LocalStorageHandler.js
 export class LocalStorageHandler {
   load() {
     const raw = localStorage.getItem('todo-tasks');
