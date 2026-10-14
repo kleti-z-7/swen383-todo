@@ -1,0 +1,65 @@
+@startuml ClassDiagram
+!pragma layout smetana
+title Todo App - Class Diagram (Week 4)
+skinparam classAttributeIconSize 0
+
+class "main.js" as Main <<module>> {
+  - service: TodoService
+  - renderer: TodoRenderer
+  - controller: TodoController
+  - add(type: string): void
+}
+
+class TodoController <<GRASP Controller>> {
+  - todoService: TodoService
+  - todoRenderer: TodoRenderer
+  + constructor(todoService: TodoService, todoRenderer: TodoRenderer)
+  + start(): void
+  + addTask(description: string, type: string): number | null
+}
+
+class TodoService <<Information Expert>> {
+  - storage: LocalStorageHandler
+  + tasks: Task[]
+  + constructor(storage: LocalStorageHandler)
+  + addTask(description: string, type: string): number | null
+  + toggleComplete(id: number): void
+  + deleteTask(id: number): void
+  + getWorkloadSummary(): string
+}
+
+class TodoRenderer {
+  - container: HTMLElement
+  + constructor(containerId: string)
+  + renderPendingRows(service: TodoService): string
+  + renderCompletedRows(service: TodoService): string
+  + render(service: TodoService, justAddedId?: number): void
+  - buildTaskRow(id, desc, completed, priority, createdAt, showActions): string
+}
+
+class LocalStorageHandler {
+  + load(): Task[]
+  + save(tasks: Task[]): void
+}
+
+class Task <<data>> {
+  + id: number
+  + desc: string
+  + completed: boolean
+  + priority: string
+  + createdAt: string
+}
+
+Main ..> TodoController : <<create>>
+Main ..> TodoService : <<create>>
+Main ..> TodoRenderer : <<create>>
+Main ..> LocalStorageHandler : <<create>>
+
+TodoController --> "1" TodoService : todoService
+TodoController --> "1" TodoRenderer : todoRenderer
+TodoService --> "1" LocalStorageHandler : storage\n(injected)
+TodoService "1" o-- "0..*" Task : tasks
+TodoRenderer ..> TodoService : reads tasks,\ncalls toggle/delete
+LocalStorageHandler ..> Task : loads / saves
+
+@enduml

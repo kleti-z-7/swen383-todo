@@ -1,0 +1,48 @@
+@startuml SequenceAddTask
+title Todo App - Add Task (Week 4)
+autonumber
+
+actor User
+participant "main.js" as Main
+participant ":TodoController" as Controller
+participant ":TodoService" as Service
+participant ":LocalStorageHandler" as Storage
+participant ":TodoRenderer" as Renderer
+
+User -> Main : click "Add Task"\n(or press Enter)
+activate Main
+Main -> Controller : addTask(input.value, 'simple')
+activate Controller
+Controller -> Service : addTask(description, type)
+activate Service
+
+alt description shorter than 3 characters
+  Service -> User : alert("Task needs at least a few characters.")
+  Service --> Controller : null
+  Controller --> Main : null
+else valid description
+  Service -> Service : build task\n(type 'urgent' -> priority 'high')
+  Service -> Service : tasks.push(task)
+  Service -> Storage : save(tasks)
+  activate Storage
+  Storage --> Service
+  deactivate Storage
+  Service --> Controller : task.id
+  deactivate Service
+
+  Controller -> Renderer : render(service, newId)
+  activate Renderer
+  Renderer -> Service : tasks
+  Renderer -> Service : getWorkloadSummary()
+  Service --> Renderer : summary text
+  Renderer -> Renderer : update page,\nflash new row
+  Renderer --> Controller
+  deactivate Renderer
+
+  Controller --> Main : newId
+  deactivate Controller
+  Main -> Main : input.value = ''
+end
+
+deactivate Main
+@enduml
