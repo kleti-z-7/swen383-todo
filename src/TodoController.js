@@ -9,7 +9,9 @@ export class TodoController {
   }
 
   addTask(description, type) {
-    const newId = this.todoService.addTask(description, type);
+    const newId = type === 'urgent'
+      ? this.todoService.addUrgentTask(description)
+      : this.todoService.addTask(description);
     if (newId) {
       this.todoRenderer.render(this.todoService, newId);
     }
